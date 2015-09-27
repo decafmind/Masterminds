@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("On");
                     textView.setTextColor(Color.GREEN);
                     isOn = true;
+
+                    Intent intent = new Intent(MainActivity.this, RemoteService.class);
+                    startService(intent);
                 }
 
                 progressDialog.dismiss();
