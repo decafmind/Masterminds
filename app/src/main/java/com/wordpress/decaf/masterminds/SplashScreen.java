@@ -29,7 +29,6 @@ public class SplashScreen extends AppCompatActivity {
 
     CountDownTimer countDownTimer = new CountDownTimer(3000, 100) {
         @Override
-
         public void onTick(long millisUntilFinished) {
             TextView textView = (TextView)findViewById(R.id.txtTitle);
             if (millisUntilFinished <= 200)
