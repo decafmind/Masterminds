@@ -1,10 +1,13 @@
 package com.wordpress.decaf.masterminds;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.CountDownTimer;
+import android.support.annotation.MainThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Timer;
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isOn = false;
     private ImageButton powerButton;
     private RelativeLayout relativeLayout;
-
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         powerButton = (ImageButton)findViewById(R.id.iBtnPower);
         relativeLayout = (RelativeLayout)findViewById(R.id.mainLayout);
+        textView = (TextView)findViewById(R.id.lblIndicator);
     }
 
     @Override
@@ -53,18 +58,46 @@ public class MainActivity extends AppCompatActivity {
 
     public void togglePower(View view){
 
-        Drawable black = ContextCompat.getDrawable(this, R.drawable.power_button_black);
-        Drawable white = ContextCompat.getDrawable(this, R.drawable.power_button_white);
+        final Drawable green = ContextCompat.getDrawable(this, R.drawable.power_button_green);
+        final Drawable white = ContextCompat.getDrawable(this, R.drawable.power_button_white);
 
-        if (isOn){
-            isOn = false;
-            powerButton.setImageDrawable(white);
-            relativeLayout.setBackgroundColor(Color.rgb(85, 85, 85));
-        }else{
-            isOn = true;
-            powerButton.setImageDrawable(black);
-            relativeLayout.setBackgroundColor(Color.WHITE);
-        }
+
+        String message;
+
+        if (isOn)
+            message = "Switching off";
+        else
+            message = "Switching on";
+
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "Loading", message);
+
+        CountDownTimer countDownTimer = new CountDownTimer(500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (isOn){
+                    powerButton.setImageDrawable(white);
+                    relativeLayout.setBackgroundColor(Color.rgb(85, 85, 85));
+                    textView.setText("Off");
+                    textView.setTextColor(Color.WHITE);
+                    isOn = false;
+                }else{
+                    powerButton.setImageDrawable(green);
+                    relativeLayout.setBackgroundColor(Color.WHITE);
+                    textView.setText("On");
+                    textView.setTextColor(Color.GREEN);
+                    isOn = true;
+                }
+
+                progressDialog.dismiss();
+            }
+        };
+
+        countDownTimer.start();
     }
 
     private void toast(String message){

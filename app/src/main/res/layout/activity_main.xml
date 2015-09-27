@@ -29,4 +29,15 @@
         android:elevation="3dp"
         android:focusable="true"
         android:cropToPadding="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Off"
+        android:id="@+id/lblIndicator"
+        android:textColor="#fff"
+        android:layout_below="@+id/iBtnPower"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp" />
 </RelativeLayout>
