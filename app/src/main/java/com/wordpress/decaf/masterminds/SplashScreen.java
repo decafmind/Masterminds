@@ -18,7 +18,7 @@ public class SplashScreen extends AppCompatActivity {
     private String[] masterMindAnagram;
     private Random random;
     private int anagramLength;
-    private CountDownTimer countDownTimer = new CountDownTimer(3000, 100) {
+    private CountDownTimer countDownTimer = new CountDownTimer(2000, 100) {
         @Override
         public void onTick(long millisUntilFinished) {
             TextView textView = (TextView)findViewById(R.id.txtTitle);
