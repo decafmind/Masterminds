@@ -15,19 +15,10 @@ import java.util.TimerTask;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private String[] masterMindAnagram = {
-            "mastermind",
-            "starmemind",
-            "mindmestar",
-            "iamahacker",
-            "mansterdim",
-    };
-
+    private String[] masterMindAnagram;
     private Random random;
     private int anagramLength;
-
-
-    CountDownTimer countDownTimer = new CountDownTimer(3000, 100) {
+    private CountDownTimer countDownTimer = new CountDownTimer(3000, 100) {
         @Override
         public void onTick(long millisUntilFinished) {
             TextView textView = (TextView)findViewById(R.id.txtTitle);
@@ -51,6 +42,14 @@ public class SplashScreen extends AppCompatActivity {
 
         if (getSupportActionBar()!= null)
             getSupportActionBar().hide();
+
+        masterMindAnagram = new String[]{
+            "mastermind",
+            "starmemind",
+            "mindmestar",
+            "iamahacker",
+            "mansterdim",
+        };
 
         random = new Random();
         anagramLength = masterMindAnagram.length - 1;
@@ -78,6 +77,7 @@ public class SplashScreen extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onRestart(){
