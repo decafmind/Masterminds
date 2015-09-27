@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">mastermind</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="str_mastermind"> Mastermind </string>
+    <string name="tagline_p1"> \"So do you think you\'re in control?</string>
+    <string name="tagline_p2"> Think again\"</string>
+</resources>
