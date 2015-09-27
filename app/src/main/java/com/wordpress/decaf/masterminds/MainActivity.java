@@ -1,16 +1,17 @@
 package com.wordpress.decaf.masterminds;
 
-import android.app.ActionBar;
+
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.CountDownTimer;
-import android.support.annotation.MainThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private TextView textView;
 
+    private Intent serviceIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         powerButton = (ImageButton)findViewById(R.id.iBtnPower);
         relativeLayout = (RelativeLayout)findViewById(R.id.mainLayout);
         textView = (TextView)findViewById(R.id.lblIndicator);
+        serviceIntent = new Intent(MainActivity.this, RemoteService.class);
     }
 
     @Override
@@ -79,12 +83,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+
                 if (isOn){
                     powerButton.setImageDrawable(white);
                     relativeLayout.setBackgroundColor(Color.rgb(85, 85, 85));
                     textView.setText("Off");
                     textView.setTextColor(Color.WHITE);
                     isOn = false;
+
+                    stopService(serviceIntent);
+
                 }else{
                     powerButton.setImageDrawable(green);
                     relativeLayout.setBackgroundColor(Color.WHITE);
@@ -92,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     textView.setTextColor(Color.GREEN);
                     isOn = true;
 
-                    Intent intent = new Intent(MainActivity.this, RemoteService.class);
-                    startService(intent);
+                    startService(serviceIntent);
+
                 }
 
                 progressDialog.dismiss();
@@ -107,5 +115,9 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
 
 }
