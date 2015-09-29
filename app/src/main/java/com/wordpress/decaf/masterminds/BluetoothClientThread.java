@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Build;
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -17,38 +15,22 @@ public class BluetoothClientThread extends Thread {
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
     private final BluetoothAdapter mmBluetoothAdapter;
-    private UUID DEFAULT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private UUID MY_UUID = UUID.fromString("ca25edd6-5a21-45e9-8dea-9b57abe44cee");
 
+    // TODO: 9/29/15
     public BluetoothClientThread(BluetoothDevice device){
         mmBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothSocket tmp = null;
         mmDevice = device;
-        UUID uudi;
 
         try {
-            // Use the UUID of the device that discovered // TODO Maybe need extra device object
-            if (mmDevice != null){
-                if (Build.VERSION.SDK_INT >= 15){
-                    tmp = device.createRfcommSocketToServiceRecord(mmDevice.getUuids()[0].getUuid());
-                }else{
-
-                }
-            }
-
-        }
-        catch (NullPointerException e)
-        {
-            try {
-                tmp = device.createRfcommSocketToServiceRecord(DEFAULT_UUID);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-        catch (IOException e) { }
+            tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+        }catch (IOException iox){ }
 
         mmSocket = tmp;
     }
 
+    // TODO: 9/29/15
     @Override
     public void run(){
         mmBluetoothAdapter.cancelDiscovery();

@@ -16,6 +16,7 @@ public class BluetoothConnectedThread extends Thread {
     private final OutputStream mmOutStream;
     private Handler mHandler;
 
+    // TODO: 9/29/15  
     public BluetoothConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
         InputStream tmpIn = null;
@@ -34,6 +35,7 @@ public class BluetoothConnectedThread extends Thread {
 
     private static final int MESSAGE_READ = 101;
 
+    // TODO: 9/29/15  
     public void run(){
         byte[] buffer = new byte[1024]; // buffer store for the stream
         int bytes; // bytes returned from read()
@@ -52,6 +54,7 @@ public class BluetoothConnectedThread extends Thread {
         }
     }
 
+    // TODO: 9/29/15  
     public void write(byte[] bytes){
         try{
             mmOutStream.write(bytes);

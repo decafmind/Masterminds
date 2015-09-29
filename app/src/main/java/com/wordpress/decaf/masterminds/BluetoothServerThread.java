@@ -11,45 +11,42 @@ import java.util.UUID;
  * Created by decaf on 9/29/15.
  */
 public class BluetoothServerThread extends Thread {
-    private final BluetoothServerSocket mServerSocket;
-    private final BluetoothAdapter mBluetoothAdapter;
-    private static final String NAME = "";
-    private UUID DEFAULT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    private final BluetoothServerSocket mServerSocket;
+    private static final String NAME = "mastermind";
+    private UUID MY_UUID = UUID.fromString("ca25edd6-5a21-45e9-8dea-9b57abe44cee");
+
+    // TODO: 9/29/15
     public BluetoothServerThread(){
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothServerSocket tmp = null;
 
         try
         {
-            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, DEFAULT_UUID);
+            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
         }catch(IOException ex){ }
 
         mServerSocket = tmp;
     }
 
+    // TODO: 9/29/15
     @Override
     public void run() {
-
-        BluetoothSocket socket;
+        BluetoothSocket socket = null;
 
         while(true){
             try{
-                socket = mServerSocket.accept();
-            }catch(IOException ex){
-                break;
-            }
+                if(mServerSocket != null) socket = mServerSocket.accept();
+            }catch(IOException iox){ break; }
 
-            try
-            {
+            try{
                 if (socket != null){
                     manageConnectedSocket(socket);
                     mServerSocket.close();
                     break;
                 }
-            }catch(IOException ex){
-                break;
-            }
+            }catch(IOException ex){ break; }
         }
     }
 
