@@ -32,7 +32,8 @@
         android:typeface="monospace"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="108dp" />
+        android:layout_marginTop="108dp"
+        android:elevation="3dp" />
 
     <TextView
         android:layout_width="wrap_content"
