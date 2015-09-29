@@ -55,4 +55,14 @@
         android:layout_centerHorizontal="true"
         android:typeface="serif" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/tagline_p3"
+        android:id="@+id/textView"
+        android:typeface="serif"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

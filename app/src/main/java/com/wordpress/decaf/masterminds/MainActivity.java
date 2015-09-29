@@ -3,6 +3,8 @@ package com.wordpress.decaf.masterminds;
 
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView;
 
     private Intent serviceIntent;
+    private static final int REQUEST_CODE_ENABLE_ADMIN = 47;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout = (RelativeLayout)findViewById(R.id.mainLayout);
         textView = (TextView)findViewById(R.id.lblIndicator);
         serviceIntent = new Intent(MainActivity.this, RemoteService.class);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -61,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void togglePower(View view){
+
 
         final Drawable green = ContextCompat.getDrawable(this, R.drawable.power_button_green);
         final Drawable white = ContextCompat.getDrawable(this, R.drawable.power_button_white);
@@ -100,11 +111,14 @@ public class MainActivity extends AppCompatActivity {
                     textView.setTextColor(Color.GREEN);
                     isOn = true;
 
-                    startService(serviceIntent);
+                    askToBeAdmin();
 
+                    startService(serviceIntent);
                 }
 
                 progressDialog.dismiss();
+
+
             }
         };
 
@@ -118,6 +132,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
+    }
+
+    private void askToBeAdmin(){
+
+        DevicePolicyManager devicePolicyManager
+                = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName deviceAdminComponentName
+                = new ComponentName(MainActivity.this, ScreenOffAdminReceiver.class);
+        boolean isActive = devicePolicyManager.isAdminActive(deviceAdminComponentName);
+
+        if (!isActive){
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdminComponentName);
+            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "You must enable device administration for certain features"
+                    + " of the app to function.");
+            startActivityForResult(intent, REQUEST_CODE_ENABLE_ADMIN);
+        }
+
     }
 
 }

@@ -40,4 +40,5 @@
         android:layout_below="@+id/iBtnPower"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp" />
+
 </RelativeLayout>
