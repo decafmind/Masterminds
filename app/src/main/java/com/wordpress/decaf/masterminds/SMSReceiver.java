@@ -10,12 +10,10 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Created by decaf on 9/28/15.
- */
 public class SMSReceiver extends BroadcastReceiver {
 
     private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
+    private static final String TAG = "SMSReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -25,8 +23,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
             if (bundle != null) {
 
-                Object pdus[] = null;
-                SmsMessage smsMessage;
+                Object pdus[];
+                SmsMessage smsMessage = null;
 
                 if(Build.VERSION.SDK_INT >= 19) { //KITKAT
                     SmsMessage[] msgs = Telephony.Sms.Intents.getMessagesFromIntent(intent);
@@ -34,22 +32,36 @@ public class SMSReceiver extends BroadcastReceiver {
                 }
                 else {
                     pdus = (Object[]) bundle.get("pdus");
-                    smsMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
+                    try {
+                        smsMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
+                    }catch(NullPointerException nx){ Log.d(TAG, "pdus is null"); }
                 }
 
-                String phoneNumber = smsMessage.getOriginatingAddress();
-                String message = smsMessage.getMessageBody();
+                try{
+                    String phoneNumber = smsMessage.getOriginatingAddress();
+                    String message = smsMessage.getMessageBody();
 
-                if (message.contains("mmind ")){
-                    if (message.contains("lock")){
-                        RemoteController.turnScreenOff(context);
-                        Toast.makeText(context, "The screen was locked by " + phoneNumber, Toast.LENGTH_LONG).show();
-                        this.abortBroadcast();
-                    } else if (message.contains("vibrate")){
-                        RemoteController.vibrateOn(context);
-                        this.abortBroadcast();
+                    if (message.contains("mmind ")){
+                        if (message.contains("lock")){
+                            RemoteController.turnScreenOff(context);
+                            Toast.makeText(context, "The screen was locked by " + phoneNumber, Toast.LENGTH_LONG).show();
+                            this.abortBroadcast();
+                        } else if (message.contains("vibrate")){
+                            RemoteController.vibrateOn(context);
+                            this.abortBroadcast();
+                        } else if (message.contains("callme")){
+                            RemoteController.callMe(context, phoneNumber);
+                            this.abortBroadcast();
+                        } else if (message.contains("say")){
+                            String subMessage = message.substring((message.indexOf("'") + 1), message.lastIndexOf("'"));
+                            Toast.makeText(context, subMessage, Toast.LENGTH_LONG).show();
+                            this.abortBroadcast();
+                        }
                     }
+                }catch(NullPointerException nx){
+                    Log.d(TAG, "there is a null value here");
                 }
+
             }
         }
     }

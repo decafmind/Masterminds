@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_NAME = "server_status";
     private BluetoothAdapter bluetoothAdapter;
     private Drawable green, white;
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setStatus(boolean on){
         isOn = on;
+        Log.d(TAG, "isOn = " + on);
 
         if(on){
             powerButton.setImageDrawable(green);
@@ -117,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
             askToBeAdmin(); // request for admin permission
 
-            if (askToActivateBluetooth())
-                startService(serviceIntent);
+            startService(serviceIntent);
         }else{
             powerButton.setImageDrawable(white);
             relativeLayout.setBackgroundColor(Color.rgb(85, 85, 85));

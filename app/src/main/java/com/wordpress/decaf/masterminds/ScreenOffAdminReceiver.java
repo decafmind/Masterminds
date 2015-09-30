@@ -4,10 +4,6 @@ import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-
-/**
- * Created by decaf on 9/28/15.
- */
 public class ScreenOffAdminReceiver extends DeviceAdminReceiver {
 
     private void showToast(Context context, String msg) {
@@ -15,13 +11,11 @@ public class ScreenOffAdminReceiver extends DeviceAdminReceiver {
     }
     @Override
     public void onEnabled(Context context, Intent intent) {
-        showToast(context,
-                context.getString(R.string.admin_receiver_status_enabled));
+        showToast(context,"admin receiver was enabled");
     }
     @Override
     public void onDisabled(Context context, Intent intent) {
-        showToast(context,
-                context.getString(R.string.admin_receiver_status_disabled));
+        showToast(context,"admin receiver was disabled");
     }
 
 

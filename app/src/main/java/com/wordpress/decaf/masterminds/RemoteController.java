@@ -3,6 +3,8 @@ package com.wordpress.decaf.masterminds;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -20,7 +22,6 @@ public class RemoteController {
 
     public static void vibrateOn(final Context context){
         Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-
         if(Build.VERSION.SDK_INT >= 11) {
             if (vibrator.hasVibrator())
                 vibrator.vibrate(2000);
@@ -49,6 +50,20 @@ public class RemoteController {
                     Toast.LENGTH_LONG).show();
         }
     }
+
+
+    public static void callMe(Context context, String number){
+        try{
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + number));
+            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(callIntent);
+        }catch(Exception e){
+            Toast.makeText(context.getApplicationContext(), "Cannot call because " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
 
 }
