@@ -20,7 +20,10 @@ public class RemoteService extends Service {
 
     private int mNotificationId = 555;
     private SMSReceiver mSMSreceiver;
-    private IntentFilter mIntentFilter;
+    private IntentFilter mSMSIntentFilter;
+    private IntentFilter mBluetoothIntentFilter;
+
+    private BluetoothReceiver mBluetoothReceiver;
     private static final String TAG = "RemoteService";
 
     public RemoteService() {
@@ -35,10 +38,14 @@ public class RemoteService extends Service {
         createNotification("status : on");
 
         mSMSreceiver = new SMSReceiver();
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        mSMSIntentFilter = new IntentFilter();
+        mSMSIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        registerReceiver(mSMSreceiver, mSMSIntentFilter);
 
-        registerReceiver(mSMSreceiver, mIntentFilter);
+        mBluetoothReceiver = new BluetoothReceiver();
+        mBluetoothIntentFilter = new IntentFilter();
+        mBluetoothIntentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
+        registerReceiver(mBluetoothReceiver, mBluetoothIntentFilter);
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
