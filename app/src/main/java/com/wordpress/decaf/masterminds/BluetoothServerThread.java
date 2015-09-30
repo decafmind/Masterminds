@@ -3,6 +3,8 @@ package com.wordpress.decaf.masterminds;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.SystemClock;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,6 +17,8 @@ public class BluetoothServerThread extends Thread {
     private final BluetoothServerSocket mServerSocket;
     private static final String NAME = "mastermind";
     private UUID MY_UUID = UUID.fromString("ca25edd6-5a21-45e9-8dea-9b57abe44cee");
+    private static final String TAG = "BluetoothServerThread";
+
 
     // TODO: 9/29/15
     public BluetoothServerThread(){
@@ -33,6 +37,8 @@ public class BluetoothServerThread extends Thread {
     // TODO: 9/29/15
     @Override
     public void run() {
+
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         BluetoothSocket socket = null;
 
         while(true){
@@ -47,8 +53,13 @@ public class BluetoothServerThread extends Thread {
                     break;
                 }
             }catch(IOException ex){ break; }
+
+            SystemClock.sleep(100);
+
+            Log.d(TAG, "Hoy");
         }
     }
+
 
     public void cancel(){
         try{

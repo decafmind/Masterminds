@@ -7,11 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import java.util.EventListener;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class SplashScreen extends AppCompatActivity {
 

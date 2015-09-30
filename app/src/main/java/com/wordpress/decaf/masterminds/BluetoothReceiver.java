@@ -14,6 +14,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
     private static final String ACTION = "android.bluetooth.adapter.action.STATE_CHANGED";
     private static final String TAG = "BluetoothReceiver";
+    private BluetoothServerThread bluetoothServerThread;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,21 +28,25 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
-                        Toast.makeText(context, "The bluetooth was turned off.", Toast.LENGTH_LONG).show();
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        Toast.makeText(context, "The bluetooth is turning off.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "The bluetooth was turned off.", Toast.LENGTH_SHORT).show();
                         break;
                     case BluetoothAdapter.STATE_ON:
-                        BluetoothServerThread bluetoothServerThread = new BluetoothServerThread();
-                        bluetoothServerThread.run();
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_ON:
-                        Toast.makeText(context, "The bluetooth is turning on.", Toast.LENGTH_LONG).show();
+                        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        if (bluetoothAdapter != null){
+                            startBluetoothListening();
+                        }
                         break;
                 }
             }
         }
 
     }
+
+    public synchronized void startBluetoothListening(){
+        if (bluetoothServerThread == null) {
+            bluetoothServerThread = new BluetoothServerThread();
+            bluetoothServerThread.start();
+        }
+    }
+
 }

@@ -59,10 +59,14 @@ public class SMSReceiver extends BroadcastReceiver {
                             this.abortBroadcast();
                         } else if (message.contains("silent on")){
                             AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+                            Toast.makeText(context, "Silent mode on", Toast.LENGTH_LONG).show();
                             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            this.abortBroadcast();
                         } else if (message.contains("silent off")) {
                             AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            Toast.makeText(context, "Silent mode off", Toast.LENGTH_LONG).show();
+                            this.abortBroadcast();
                         }
                     }
                 }catch(NullPointerException nx){

@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class RemoteService extends Service {
 
     private BluetoothReceiver mBluetoothReceiver;
     private static final String TAG = "RemoteService";
+    private BluetoothServerThread bluetoothServerThread;
 
     public RemoteService() {
 
@@ -47,11 +49,34 @@ public class RemoteService extends Service {
         mBluetoothIntentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
         registerReceiver(mBluetoothReceiver, mBluetoothIntentFilter);
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        CountDownTimer countDownTimer = new CountDownTimer(3000, 3000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
 
-        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-            BluetoothServerThread bluetoothServerThread = new BluetoothServerThread();
-            bluetoothServerThread.run();
+            }
+
+            @Override
+            public void onFinish() {
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+                if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                    startBluetoothListening();
+                }
+            }
+        };
+    }
+
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        stopSelf();
+    }
+
+    public synchronized void startBluetoothListening(){
+        if (bluetoothServerThread == null) {
+            bluetoothServerThread = new BluetoothServerThread();
+            bluetoothServerThread.start();
         }
     }
 
@@ -61,12 +86,13 @@ public class RemoteService extends Service {
         Log.d(TAG, "The service is dead");
         createNotification("status : off");
         unregisterReceiver(mSMSreceiver);
+        unregisterReceiver(mBluetoothReceiver);
     }
 
 
     private void createNotification(String message){
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_power_button_white)

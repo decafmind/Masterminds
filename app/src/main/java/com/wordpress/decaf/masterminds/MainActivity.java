@@ -1,7 +1,6 @@
 package com.wordpress.decaf.masterminds;
 
 
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
@@ -15,7 +14,6 @@ import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +21,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout = (RelativeLayout)findViewById(R.id.mainLayout);
         textView = (TextView)findViewById(R.id.lblIndicator);
         serviceIntent = new Intent(MainActivity.this, RemoteService.class);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         SharedPreferences settings = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         isOn = settings.getBoolean("isOn", false);
